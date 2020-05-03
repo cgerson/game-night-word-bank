@@ -7,13 +7,13 @@
         <h1>Word Bank</h1>
         <div id = "information">
             <p>
-                /pickacard - picks a random card<br> 
-                /add - add a new card<br> 
-                /reset - reset back to original card stack<br> 
+                <a href = "/pickcard">pickcard</a>  - pick a random card<br>
+                <a href = "/add">add</a>  - add custom cards<br>
+                <a href = "/reset">reset</a> - reset to original card stack<br>
             </p>
         </div>
         <div id = "result">
-            <p>{{ card }}</p>
+            <h3>{{ card }}</h3>
             <p>Cards left: {{ numcards }}</p>
         </div>
     </body>
