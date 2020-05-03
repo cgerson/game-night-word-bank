@@ -1,25 +1,16 @@
-<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
-<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
-
-
-<html>
-    <head>
-        <title>Word Bank</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-        <meta charset=utf-8> 
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        <h1>Word Bank</h1>
-        <div id = "information">
-            <p><a href = "/pickcard">pickcard</a>  - pick a random card</p>
-            <p><a href = "/add">add</a>  - add custom cards</p>
-            <p><a href = "/reset">reset</a> - reset to original card stack</p>
-        </div>
-        <div id = "result">
-            <h3>{{ card }}</h3>
-            <p>Cards left: {{ numcards }}</p>
-        </div>
-    </body>
-</html>
-
+{% extends "layout.html" %}
+{% block content %}
+<div id = "information">
+    <p><a href = "/pickcard">pickcard</a>  - pick a random card</p>
+    <p><a href = "/add">add</a>  - add custom cards</p>
+    <p><a href = "/reset">reset</a> - reset card pack</p>
+</div>
+<div id = "result">
+    <h3>{{ card }}</h3>
+</div>
+<div>
+    <p>Cards left: <b>{{ numcards }}</b></p>
+    <p>Card pack: <b>{{ card_pack_label }}</b></p>
+    <a href = "/setcardpack">(change card pack)</a>
+</div>
+{% endblock %}

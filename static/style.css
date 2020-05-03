@@ -13,6 +13,52 @@ body {
     letter-spacing: 0.1em;
   }
 
-  p {
-    margin-top: 5px;
+ input#wordpack {
+    height: 25px;
+    width: 175px;
+    font-size: 1.3em;
+    border-right: none;
+    letter-spacing: 0.1em;
   }
+
+p {
+    margin-top: 10px;
+  }
+
+ h1 a {
+    text-decoration: none;
+  }
+
+a:link {
+    color: black;
+  }
+/* A link that has been visited */
+a:visited {
+    color: black;
+}
+/* A link that is hovered on */
+a:hover {
+    color: blue;
+}
+
+#footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+
+#breadcrumbs {
+  font-size: 12;
+}
+
+#information {
+  font-size: 16;
+}
+
+#result {
+  border-style: solid;
+  padding: 10px;
+  text-align: center;
+}
