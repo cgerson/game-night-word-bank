@@ -9,11 +9,7 @@ from flask import Flask, render_template, request
 # https://hackersandslackers.com/redis-py-python/
 
 app = Flask(__name__)
-local = True
-if local:
-    redis_url = 'redis://rediscloud:Fc4aIcY1b8uIcFIDDIkVCguFYO3rU0dI@redis-18892.c232.us-east-1-2.ec2.cloud.redislabs.com:18892'
-else:
-    redis_url = os.environ['REDISCLOUD_URL']
+redis_url = os.environ['REDISCLOUD_URL']
 
 db=redis.from_url(redis_url)
 db.set('cards_remaining', 'Oprah_Santa Claus_Harry Potter_Beyonce_Lance Armstrong')
@@ -32,7 +28,7 @@ def reset():
 
 @app.route('/update/', methods = ['POST', 'GET'])
 def update():
-    cards=str(db.get('cards_remaining'))
+    cards=db.get('cards_remaining').decode('UTF-8')
     newcard = request.form.get("newcard")
     cards = cards + "_" + str(newcard)
     db.set('cards_remaining',cards)
