@@ -16,9 +16,9 @@ else:
     redis_url = os.environ['REDISCLOUD_URL']
 
 db=redis.from_url(redis_url)
-db.set('default_card_pack', 'Oprah_Santa Claus_Harry Potter_Beyonce_Lance Armstrong')
+db.set('default_card_pack', 'Oprah_Santa Claus_Harry Potter_Beyonce_Lance Armstrong_Steve Jobs_Tom Hanks_Lil Dicky_Moses_Marge Simpson_Captain Kirk_FDR_Gandalf')
 db.set('custom_card_pack', '', 14400) # 4 hour ttl
-db.set('cards_remaining', 'Oprah_Santa Claus_Harry Potter_Beyonce_Lance Armstrong')
+db.set('cards_remaining', 'Oprah_Santa Claus_Harry Potter_Beyonce_Lance Armstrong_Steve Jobs_Tom Hanks_Lil Dicky_Moses_Marge Simpson_Captain Kirk_FDR_Gandalf')
 db.set('card_pack', 'default_card_pack')
 card_pack_labels = {
     'default_card_pack': 'Default',
