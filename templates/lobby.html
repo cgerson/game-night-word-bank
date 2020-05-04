@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% block content %}
+    <form id = "game_name" method="POST">
+        Game Name: <input type="text" name="gamename" required><input type="submit" name="submit" value="Create">
+    </form>
+Go to game link: <a href = "{{ result }}">{{ result }}</a>
+{% endblock %}
