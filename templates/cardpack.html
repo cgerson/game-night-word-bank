@@ -1,18 +1,23 @@
 {% extends "layout.html" %}
 {% block content %}
-        <form id = "set_card_pack" method="POST" action="/updatecardpack">
-            {% if checked == "Custom" %}
-                <input type="radio" name="cardpack" value="custom_card_pack" checked>Custom</input><br>
-            {% else %}
-                <input type="radio" name="cardpack" value="custom_card_pack">Custom</input><br>
-            {% endif %}
-            {% if checked == "Default" %}
-                <input type="radio" name="cardpack" value="default_card_pack" checked>Default</input><br>
-            {% else %}
-                <input type="radio" name="cardpack" value="default_card_pack">Default</input><br>
-            {% endif %}
-            <br><input type="submit" name="submit" value="Select">
-        </form>
-        {{ result }}
-        <p id = "breadcrumbs"><a href = "/reset">&lt;- Back</a><br></p>
+<div id = "form-submit">
+    <form id = "set_card_pack" method="POST" action="/{{ game_name }}/updatecardpack/">
+        {% if checked == "custom" %}
+            <input type="radio" name="cardpack" value="custom_card_pack_{{ game_name }}" checked>Custom</input><br>
+        {% else %}
+            <input type="radio" name="cardpack" value="custom_card_pack_{{ game_name }}">Custom</input><br>
+        {% endif %}
+        {% if checked == "default" %}
+            <input type="radio" name="cardpack" value="default_card_pack" checked>Default</input><br>
+        {% else %}
+            <input type="radio" name="cardpack" value="default_card_pack">Default</input><br>
+        {% endif %}
+        <br><input type="submit" name="submit" value="Select">
+    </form>
+    {{ result }}
+    <form id = "empty_card_pack" method="POST" action="/{{ game_name }}/emptycardpack/">
+        <button type="submit" id="dangerbutton">Empty custom card pack?</button>
+    </form>
+    <p id = "breadcrumbs"><a href = "/{{ game_name }}/">&lt;- Back</a><br></p>
+</div>
 {% endblock %}

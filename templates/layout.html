@@ -10,11 +10,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
-        <h1><a href = "/">Word Bank</a></h1>
+        {% if game_name is defined %}
+        <div id = "header">Your unique game name: <b>{{ game_name }}</b></div>
+        {% else %}
+        {% endif %}
+        <h1><a href = "/{{ game_name }}/">Word Bank</a></h1>
         {% block content %} {% endblock %}
         <div id="footer">
             {% block footer %}
-            &copy; Copyright 2020 by <a href="http://www.clairegerson.com/">me</a>.
+            &copy; Copyright 2020 by <a href="http://www.clairegerson.com/" target="_blank">me</a>.
             {% endblock %}
         </div>
     </body>

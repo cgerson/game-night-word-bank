@@ -1,8 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
-        <form id = "card" method="POST" action="/update">
-            New Card: <input type="text" name="newcard" required><input type="submit" name="submit" value="Add">
-        </form>
-        {{ result }}
-        <p id = "breadcrumbs"><a href = "/reset">&lt;- Back</a><br></p>
+<div id = "form-submit">
+    <form id = "card" method="POST" action="/{{ game_name }}/update/">
+        New Card: <input type="text" name="newcard" required><input type="submit" name="submit" value="Add">
+    </form>
+    {{ result }}
+    <p id = "breadcrumbs"><a href = "/{{ game_name }}/reset/">&lt;- Back</a></p>
+</div>
 {% endblock %}
