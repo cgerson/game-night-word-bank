@@ -13,14 +13,13 @@
     <p><b>{{ numcards }}</b> cards remaining</p>
 </div>
 <div class = "row">
-    <form method="POST" action="/{{ game_name }}/pickcard/" class="col-xs-5">
+    <form method="POST" action="/{{ game_name }}/pickcard/" class="col-xs-12 col-md-5">
         <button type="submit" id="submit">Pick Card</button>
     </form>
-    <div id = "result" class="col-xs-5">{{ card }}</div>
-    <form method="GET" action="/{{ game_name }}/reset/" class="col-xs-2">
+    <div id = "result" class="col-xs-12 col-md-5">{{ card }}<span id = "error">{{ error }}</span></div>
+    <form method="GET" action="/{{ game_name }}/reset/" class="col-xs-12 col-md-2">
         <button type="submit" id="reload" title="reset card pack"><span class="material-icons">restore</span></button>
     </form>
 </div>
-<span id = "error">{{ error }}</span>
 
 {% endblock %}
