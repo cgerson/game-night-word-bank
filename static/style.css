@@ -96,6 +96,7 @@ input[type=button], input[type=submit], #submit, #dangerbutton {
   left: 0px;
   right: 0px;
   margin-bottom: 0px;
+  margin-top: 5%;
   width: 100%;
   text-align: center;
 }
