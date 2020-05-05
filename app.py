@@ -13,17 +13,8 @@ redis_url = os.environ['REDISCLOUD_URL']
 
 default_card_pack_string = 'Oprah_Santa Claus_Harry Potter_Beyonce_Lance Armstrong_Steve Jobs_Tom Hanks_Lil Dicky_Moses_Marge Simpson_Captain Kirk_FDR_Gandalf'
 
-#default_game_name = "game-name"
-#custom_card_pack_key = 'custom_card_pack_{0}'.format(default_game_name)
-
 db=redis.from_url(redis_url)
 db.set('default_card_pack', default_card_pack_string)
-"""
-db.set('custom_card_pack', '', 14400) # 4 hour ttl
-db.set('cards_remaining', default_card_pack_string)
-db.set('card_pack', 'default_card_pack')
-db.set('game_name', default_game_name)
-"""
 
 card_pack_labels = {
     'default_card_pack': 'Default',
@@ -60,7 +51,7 @@ def lobby():
     set_game_variables(game_name)
 
     if game_name:
-        root_url = "http://game-night-word-bank.herokuapp.com"
+        root_url = "https://game-night-word-bank.herokuapp.com"
         game_link = "{root}/{game_name}".format(root = root_url, game_name = game_name)
         game_link_instruction = "Go to game link / share with friends: "
         
@@ -159,6 +150,9 @@ def set_game_variables(game_name):
     db.set(custom_card_pack_key, '', 14400) # 4 hour ttl
     db.set(cards_remaining_key, default_card_pack_string, 14400)
     db.set(card_pack_key, 'default_card_pack', 14400)
+
+    # create key and store all active game names
+
     return
 
 if __name__ == '__main__':
