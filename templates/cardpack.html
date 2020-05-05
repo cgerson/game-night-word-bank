@@ -2,16 +2,18 @@
 {% block content %}
 <div id = "form-submit">
     <form id = "set_card_pack" method="POST" action="/{{ game_name }}/updatecardpack/">
-        {% if checked == "custom" %}
-            <input type="radio" name="cardpack" value="custom_card_pack_{{ game_name }}" checked>Custom</input><br>
-        {% else %}
-            <input type="radio" name="cardpack" value="custom_card_pack_{{ game_name }}">Custom</input><br>
-        {% endif %}
-        {% if checked == "default" %}
-            <input type="radio" name="cardpack" value="default_card_pack" checked>Default</input><br>
-        {% else %}
-            <input type="radio" name="cardpack" value="default_card_pack">Default</input><br>
-        {% endif %}
+        <label class="customselect">
+            {% if checked == "custom" %}
+                <input type="radio" name="cardpack" value="custom_card_pack_{{ game_name }}" checked>Custom</input><br>
+            {% else %}
+                <input type="radio" name="cardpack" value="custom_card_pack_{{ game_name }}">Custom</input><br>
+            {% endif %}
+            {% if checked == "default" %}
+                <input type="radio" name="cardpack" value="default_card_pack" checked>Default</input><br>
+            {% else %}
+                <input type="radio" name="cardpack" value="default_card_pack">Default</input><br>
+            {% endif %}
+        </label>
         <br><input type="submit" name="submit" value="Select">
     </form>
     {{ result }}

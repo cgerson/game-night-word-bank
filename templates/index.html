@@ -1,16 +1,26 @@
 {% extends "layout.html" %}
 {% block content %}
-<div id = "nav">
-    <p><a href = "/{{ game_name }}/pickcard/">pickcard</a>  - pick a random card</p>
-    <p><a href = "/{{ game_name }}/add/">add</a>  - enter custom cards</p>
-    <p><a href = "/{{ game_name }}/reset/">reset</a> - reset card pack</p>
+<div class = "about">
+    Everyone with this game link is picking from the same card pack. Game initializes with a default card pack. Enter custom cards and update card pack to "Custom" to play with your own cards.<br><br>
+    When there are 0 cards remaining, press the reset icon to begin again!
 </div>
-<div id = "result">
-    <h3>{{ card }}</h3>
+<div class = "nav">
+    <p><a href = "/{{ game_name }}/add/">enter custom cards</a></p>
+    <p><a href = "/{{ game_name }}/setcardpack/">update / empty card pack</a></p>
 </div>
-<div id = "status">
-    <p><b>{{ numcards }}</b> cards remaining</p>
+<div class = "status">
     <p>Picking from <b>{{ card_pack_label }}</b> card pack</p>
-    <a href = "/{{ game_name }}/setcardpack/">(update card pack)</a>
+    <p><b>{{ numcards }}</b> cards remaining</p>
 </div>
+<div class = "row">
+    <form method="POST" action="/{{ game_name }}/pickcard/" class="col-xs-5">
+        <button type="submit" id="submit">Pick Card</button>
+    </form>
+    <div id = "result" class="col-xs-5">{{ card }}</div>
+    <form method="GET" action="/{{ game_name }}/reset/" class="col-xs-2">
+        <button type="submit" id="reload" title="reset card pack"><span class="material-icons">restore</span></button>
+    </form>
+</div>
+<span id = "error">{{ error }}</span>
+
 {% endblock %}

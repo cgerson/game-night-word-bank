@@ -36,14 +36,14 @@ card_pack_labels = {
 # save users choices "card_pack_<gamename>" = "custom_card_pack"
 
 @app.route('/<game_name>/')
-def home(game_name, card = ""):
+def home(game_name, card = "", error = ""):
     numcards = get_numcards(game_name)
     current_card_pack = get_current_card_pack(game_name)
-    return render_template('index.html', numcards = numcards, card_pack_label = current_card_pack, card = card, game_name = game_name)
+    return render_template('index.html', numcards = numcards, card_pack_label = current_card_pack, card = card, game_name = game_name, error = error)
 
-# set back cards remaining to chosen c ardpack
+# set back cards remaining to chosen cardpack
 @app.route('/<game_name>/reset/')
-def reset(game_name):
+def reset(game_name, methods = ['POST', 'GET']):
     card_pack_key = sessionize('card_pack',game_name)
     cardpack = db.get(card_pack_key)
     cards = db.get(cardpack).decode('UTF-8')
@@ -53,12 +53,18 @@ def reset(game_name):
 
 @app.route('/', methods = ['POST', 'GET'])
 def lobby():
+    game_link = ""
+    game_link_instruction = ""
+
     game_name = request.form.get('gamename', '')
     set_game_variables(game_name)
 
-    root_url = "http://game-night-word-bank.herokuapp.com"
-    result = "{root}/{game_name}".format(root = root_url, game_name = game_name)
-    return render_template('lobby.html', result = result)
+    if game_name:
+        root_url = "http://game-night-word-bank.herokuapp.com"
+        game_link = "{root}/{game_name}".format(root = root_url, game_name = game_name)
+        game_link_instruction = "Go to game link / share with friends: "
+        
+    return render_template('lobby.html', game_link_instruction = game_link_instruction, game_link = game_link)
 
 # add cards to default or custom cardpack
 @app.route('/<game_name>/update/', methods = ['POST', 'GET'])
@@ -106,12 +112,15 @@ def emptycardpack(game_name):
     return home(game_name)
 
 # pick cards from a temp set, so that card list remains for reset
-@app.route('/<game_name>/pickcard/')
+@app.route('/<game_name>/pickcard/', methods = ['POST', 'GET'])
 def pickcard(game_name):
     cards_remaining_key = sessionize('cards_remaining',game_name)
     cards_raw = db.get(cards_remaining_key).decode('UTF-8').split("_")
     cards = list(filter(lambda x: x, cards_raw))
     numcards = 0
+
+    card = ''
+    error = ''
 
     if len(cards) > 0:
         card = random.choice(cards)
@@ -121,9 +130,9 @@ def pickcard(game_name):
         #cards_remaining_key = sessionize('cards_remaining',game_name)
         db.set(cards_remaining_key, cards_remaining)
     else:
-        card = "CLICK RESET TO BEGIN NEXT ROUND"
+        error = "card pack empty."
 
-    return home(game_name, card = card)
+    return home(game_name, card = card, error = error)
 
 def get_current_card_pack(game_name):
     card_pack_key = sessionize('card_pack',game_name)

@@ -1,6 +1,6 @@
 <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
 <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <html>
     <head>
@@ -12,9 +12,10 @@
     <body>
         {% if game_name is defined %}
         <div id = "header">Your unique game name: <b>{{ game_name }}</b></div>
+        <h1><a href = "/{{ game_name }}">Word Bank</a></h1>
         {% else %}
+        <h1><a href = "/">Word Bank</a></h1>
         {% endif %}
-        <h1><a href = "/{{ game_name }}/">Word Bank</a></h1>
         {% block content %} {% endblock %}
         <div id="footer">
             {% block footer %}
