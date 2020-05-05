@@ -1,16 +1,20 @@
 body {
   justify-content: center;
   align-content: center;
-  padding-left: 12%;
-  padding-right: 12%;
+  padding-left: 18%;
+  padding-right: 18%;
   padding-top: 5%;
-  padding-bottom: 40%;
+  padding-bottom: 10%;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   letter-spacing:.16em;
 }
 
+#copyright {
+  padding-bottom: 2%;
+}
+
 .about, .status, .nav {
-  margin-top: 9%;
+  margin-top: 4%;
 }
 
 .row {
@@ -89,13 +93,6 @@ input[type=button], input[type=submit], #submit, #dangerbutton {
 #header {
   margin-bottom: 5%;
   width: 100%;
-}
-
-#footer {
-  position: fixed;
-  margin-top: 20%;
-  margin-bottom: 0px;
-  text-align: center;
 }
 
 /* links */
