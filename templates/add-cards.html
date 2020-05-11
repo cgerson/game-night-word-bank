@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<form id = "add_cards" method="POST" action="/{{ gamename }}/add_one_card/">
+    <input type="text" name="newcard" placeholder="enter new card" required><br>
+    <input type="submit" name="submit" id="game_option" value="Add">
+</form>
+{% for c in cards_added %}
+    <p>{{ c }}</p>
+{% endfor %}
+<p id = "status">Currently {{ numcards }} in card pack
+    <a href="/{{ gamename }}/add-cards/">(update)</a>
+</p><br>
+<form id = "complete_add_cards" method="GET" action="/{{ gamename }}/">
+    <button type="submit" id="game_option">I'm finished adding cards</button>
+</form>
+
+{% endblock %}

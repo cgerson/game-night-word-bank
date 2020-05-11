@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% block content %}
+<form id = "join_game" method="POST" action="/build_existing_game/">
+    <input type="text" name="gamename" placeholder="enter game name" required><br>
+    <input type="submit" name="submit" id="game_option" value="Join">
+</form>
+{% endblock %}

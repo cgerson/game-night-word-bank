@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block content %}
+<form id = "confirm" method="POST" action="/{{ gamename }}/pick_card/">
+    <select name = "team">
+        <option value="team1" {{ selected_team1 }}>Team 1</option>
+        <option value="team2" {{ selected_team2 }}>Team 2</option>
+    </select>
+    <p>{{ card }}</p>
+    <button type="submit" name="card_success" value="true">Yes</button>
+    <button type="submit" name="card_success" value="false">No</button>
+</form>
+<form id = "start" method="POST" action="/{{ gamename }}/start_round/">
+    <button type="submit" id="start">Start</button>
+</form>
+<p id = "status">
+    <span>Team 1: {{ team1_score }}</span><br>
+    <span>Team 2: {{ team2_score }}</span><br>
+    <span>Cards remaining: {{ numcards }}</span>
+</p>
+{% endblock %}

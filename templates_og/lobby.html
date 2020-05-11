@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class = "lobby">
+    <p>Name your game and click "Create" to begin. Your shareable game link will appear below.</p>
+    <form id = "game_name" method="POST">
+        <input type="text" name="gamename" required><input type="submit" name="submit" id="gamename" value="Create">
+    </form>
+    <span>
+        {{ game_link_instruction }}<br><br>
+        <a href = "{{ game_link }}">{{ game_link }}</a>
+    </span>
+</div>
+{% endblock %}

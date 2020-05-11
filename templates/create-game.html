@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+<form id = "create_game" method="POST" action="/build_new_game/">
+    <input type="text" name="gamename" placeholder="enter game name" required><br>
+    <p id="instruction">Do you want to enter your own cards (Custom) or play with the default cards (Default)?</p>
+    <p id="select">
+        <input type="radio" name="cardpack" id="custom" value="custom" checked>
+        <label for="custom">Custom (recommended)</label><br>
+        <input type="radio" name="cardpack" id="default" value="default">
+        <label for="default">Default</label><br>
+    </p>
+    <input type="submit" name="submit" id="game_option" value="Create">
+    {{ session_var }}
+</form>
+{% endblock %}
