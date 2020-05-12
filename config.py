@@ -13,5 +13,5 @@ class Config:
 
     # Flask-Session
     SESSION_TYPE = environ.get('SESSION_TYPE')
-    #REDISCLOUD_URL = environ.get('SESSION_REDIS')
+    REDISCLOUD_URL = environ.get('SESSION_REDIS')
     SESSION_REDIS = redis.from_url(environ.get('REDISCLOUD_URL'))

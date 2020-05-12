@@ -1,31 +1,41 @@
 from __future__ import unicode_literals
 
-import os
-import random
-import redis
 from flask import Flask, render_template, request, session, url_for, redirect
-
 from flask_session import Session
+# from flask_assets import Environment, Bundle
 
+from game import Game
 
 # http://clouddatafacts.com/heroku/heroku-flask-redis/flask_redis.html#pre-rerequisites 
 # https://hackersandslackers.com/redis-py-python/
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=False)
 app.config.from_object('config.Config')
+
 Session(app)
 
-redis_url = os.environ['REDISCLOUD_URL']
+'''
+assets = Environment(app)
 
-placeholder_cards = 'Oprah_Santa Claus_Harry Potter_Beyonce_Lance Armstrong_Steve Jobs_Tom Hanks_Lil Dicky_Moses_Marge Simpson_Captain Kirk_FDR_Gandalf_Netanyahu_Beatrice Potter_Peter Pan'
+js_bundle = Bundle('src/js/main.js',
+                   filters='jsmin',
+                   output='dist/js/main.min.js')
+assets.register('main_js', js_bundle)
+js_bundle.build()
+'''
 
-db=redis.from_url(redis_url)
-db.set('default_card_pack', placeholder_cards)
+action_labels = {
+    'start': 'Start',
+    'stop': 'Stop',
+    'start_new': 'Start'
+}
+
 
 # TODO
-# use session to record last card picked?
-# use session to record last team picked?
-# don't expose pick_card URL, can I route thru pick_card to home, but still send card picked? this might be a good use of sessions
+# use hashes to record each games "last" things: last card, last team. though session might make more sense
+# reorg with application context and all that
+# keep track of rounds
+# reset score?
 
 @app.route('/', methods = ['POST', 'GET'])
 def lobby():  
@@ -42,8 +52,7 @@ def join_game():
 @app.route('/build_new_game/', methods = ['POST', 'GET'])
 def build_new_game(): 
     # reset session vars when beginning a new game
-    session['cards_added'] = []
-    session['current_card'] = ''
+    resetSessionVars()
 
     gamename = request.form.get('gamename', '')
     cardpack = request.form.get('cardpack', '')
@@ -60,8 +69,7 @@ def build_new_game():
 @app.route('/build_existing_game/', methods = ['POST', 'GET'])
 def build_existing_game(): 
     # reset session vars when beginning a new game
-    session['cards_added'] = []
-    session['current_card'] = ''
+    resetSessionVars()
 
     gamename = request.form.get('gamename', '')
     return redirect(url_for('add_cards', gamename = gamename))
@@ -86,33 +94,34 @@ def add_cards(gamename):
 @app.route('/<gamename>/', methods = ['POST', 'GET'])
 def home(gamename, card='', selected_team1 = '', selected_team2 = ''): 
     game = Game(gamename)
-    numcards = game.getNumCards()
+    numcards = game.getNumCardsRemaining()
     score = game.getScore()
     team1_score = score['team1_score']
     team2_score = score['team2_score']
-    card = session.get('current_card', '')
+    card = session.get('current_card')
+    next_action = session.get('next_action', 'start')
+    next_action_label = action_labels[next_action]
+    team_checked = session.get('team_checked', 'team1')
     
-    return render_template('home.html', gamename = gamename, card = card, team1_score = team1_score, team2_score = team2_score, numcards = numcards, selected_team1 = selected_team1, selected_team2 = selected_team2)
+    return render_template('home.html', gamename = gamename, card = card, team1_score = team1_score, team2_score = team2_score, numcards = numcards, team_checked = team_checked, next_action = next_action, next_action_label = next_action_label)
 
 @app.route('/<gamename>/pick_card/', methods = ['POST', 'GET'])
 def pick_card(gamename):  
 
     game = Game(gamename)
     card_success = request.form.get('card_success')
-    team = request.form.get('team')
-    selected_team1 = "selected" if team == 'team1' else ''
-    selected_team2 = "selected" if team == 'team2' else ''
 
      # not needed
 
     if card_success == "false":
         game.returnLastCard()
-    elif card_success == "true":
-        game.addPoint(team)
+    elif card_success == "true": # need logic here if like, 
+        game.addPoint(session['team_checked'])
     
     card = game.pickCard()
     if not card:
         card = "Round is over. Click 'Start' when ready to begin next round."
+        session['next_action'] = 'start_new'
     session['current_card'] = card
     return redirect(url_for('home', gamename = gamename))
     #return home(gamename = gamename, card = card, selected_team1 = selected_team1, selected_team2 = selected_team2)
@@ -120,94 +129,42 @@ def pick_card(gamename):
 @app.route('/<gamename>/start_round/', methods = ['POST', 'GET'])
 def start_round(gamename):  
     game = Game(gamename)
-    game.reset()
+    
+    team = request.form.get('team')
+    session['team_checked'] = team
+
+    session['next_action'] = 'stop'
     return redirect(url_for('pick_card', gamename = gamename))
 
-class Game:
-    def __init__(self, gamename, cardpack = "custom"):
-        self.gamename = gamename
-        self.cardpack = cardpack
-        self.team1_score_key = self.sessionize('team1_score',self.gamename)
-        self.team2_score_key = self.sessionize('team2_score',self.gamename)
-        self.last_card_picked_key = self.sessionize('last_card_picked',self.gamename)
-        self.card_pack_key = self.sessionize('card_pack',self.gamename)
-        self.cards_remaining_key = self.sessionize('cards_remaining',self.gamename)
+@app.route('/<gamename>/stop_round/', methods = ['POST', 'GET'])
+def stop_round(gamename):  
+    game = Game(gamename)
+    game.returnLastCard()
+    session['current_card'] = ''
+    session['next_action'] = 'start'
+    return redirect(url_for('home', gamename = gamename))
 
-    def setVars(self):
-        # track two game vars:
-        # 1 - full card set, in "card_pack_key"
-        # 2 - cards remaining in full card set at any moment in game, in "cards_remaining_key" 
-        
-        default_cards_value = placeholder_cards if self.cardpack == 'default' else ''
-        db.set(self.cards_remaining_key, default_cards_value, 14400)
-        db.set(self.card_pack_key, default_cards_value, 14400) # 4 hour ttl
-        
-        db.set(self.team1_score_key, '0', 14400)
-        db.set(self.team2_score_key, '0', 14400)
-        db.set(self.last_card_picked_key, '', 14400)
-    
-    def addCard(self, card):
-        cards=db.get(self.card_pack_key).decode('UTF-8')
-        cards = cards + "_" + str(card)
-        db.set(self.card_pack_key,cards)
-        db.set(self.cards_remaining_key,cards)
+@app.route('/<gamename>/start_new_round/', methods = ['POST', 'GET'])
+def start_new_round(gamename):  
+    game = Game(gamename)
+    game.reset()
+    team = request.form.get('team')
+    session['team_checked'] = team
+    session['next_action'] = 'stop'
+    return redirect(url_for('pick_card', gamename = gamename))
 
-    def pickCard(self):
-        # pull cards from cards remaining
-        # listify and select random card
-        # rejoin as string and set as cards remaining
+# TODO test this
+@app.errorhandler(404)
+def not_found():
+    """Page not found."""
+    return make_response(render_template("404.html"), 404)
 
-        cards_raw = db.get(self.cards_remaining_key).decode('UTF-8').split("_")
-        cards = list(filter(lambda x: x, cards_raw))
-        if len(cards) > 0:
-            card = random.choice(cards)
-            db.set(self.last_card_picked_key,card) # set last card picked
-            cards.remove(card)
-            cards_remaining = "_".join(cards)
-            db.set(self.cards_remaining_key, cards_remaining)
-            return card
-        return None
-        
-    def returnLastCard(self):
-        cards=db.get(self.cards_remaining_key).decode('UTF-8')
-        last_card_picked = db.get(self.last_card_picked_key).decode('UTF-8')
-        cards = cards + "_" + str(last_card_picked)
-        db.set(self.cards_remaining_key,cards)
-
-    def reset(self):
-        cards=db.get(self.card_pack_key).decode('UTF-8')
-        db.set(self.cards_remaining_key,cards)
-        
-    def addPoint(self, team):
-        if team == "team1":
-            current_score = int(db.get(self.team1_score_key).decode('UTF-8'))
-            new_score = current_score + 1
-            db.set(self.team1_score_key, str(new_score))
-        if team == "team2":
-            current_score = int(db.get(self.team2_score_key).decode('UTF-8'))
-            new_score = current_score + 1
-            db.set(self.team2_score_key, str(new_score))
-        else:
-            return "Team does not exist." # bad error handling
-    
-    def getScore(self):
-        team1_score = db.get(self.team1_score_key).decode('UTF-8')
-        team2_score = db.get(self.team2_score_key).decode('UTF-8')
-        return {
-            'team1_score': team1_score,
-            'team2_score': team2_score
-        }
-
-    def getNumCards(self):
-        if db.exists(self.cards_remaining_key):
-            cards_raw=db.get(self.cards_remaining_key).decode('UTF-8').split("_")
-            cards = list(filter(lambda x: x, cards_raw))
-            return len(cards)
-        return 0
-
-    def sessionize(self, s, gamename):
-        return '{s}_{gamename}'.format(s=s, gamename=gamename)
-
+def resetSessionVars():
+    session['cards_added'] = []
+    session['current_card'] = ''
+    session['next_action'] = 'start'
+    session['team_checked'] = 'team1'
+    return
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

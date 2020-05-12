@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<p id="instruction">Add celebrity names, fictional characters, your favorite food -- whatever you want your friends to guess. Enter five cards per person for typical game play, but adjust for shorter / longer games. </p>
 <form id = "add_cards" method="POST" action="/{{ gamename }}/add_one_card/">
     <input type="text" name="newcard" placeholder="enter new card" required><br>
     <input type="submit" name="submit" id="game_option" value="Add">

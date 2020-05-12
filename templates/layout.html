@@ -1,6 +1,7 @@
 <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
 <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="{{ url_for('static', filename='dist/js/main.min.js') }}"></script>
 
 <html>
     <head>
@@ -13,12 +14,11 @@
         <div id = "copyright" >
             &copy; Copyright 2020 by <a href="http://www.clairegerson.com/" target="_blank">me</a>.<br>
         </div>
-        {% if game_name is defined %}
-        <div id = "header">Your unique game name: <b>{{ game_name }}</b></div>
-        <h1><a href = "/{{ game_name }}">Word Bank</a></h1>
-        {% else %}
-        <h1><a href = "/">Word Bank</a></h1>
+        {% if gamename is defined %}
+        <div id = "header">Share this game link and tell friends to enter <b>{{ gamename }}</b></div>
         {% endif %}
+        <h1><a href = "/">Word Bank</a></h1>
+        
         {% block content %} {% endblock %}
         </div>
     </body>

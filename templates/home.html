@@ -1,16 +1,21 @@
 {% extends "layout.html" %}
 {% block content %}
-<form id = "confirm" method="POST" action="/{{ gamename }}/pick_card/">
+<form id = "start_stop" method="POST" action="/{{ gamename }}/{{ next_action }}_round/">
     <select name = "team">
-        <option value="team1" {{ selected_team1 }}>Team 1</option>
-        <option value="team2" {{ selected_team2 }}>Team 2</option>
+        {% if team_checked == 'team1' %}
+        <option value="team1" selected>Team 1</option>
+        <option value="team2">Team 2</option>
+        {% else %}
+        <option value="team1">Team 1</option>
+        <option value="team2" selected>Team 2</option>
+        {% endif %}
     </select>
+    <button type="submit" id="start_stop">{{ next_action_label }}</button>
+</form>
+<form id = "confirm" method="POST" action="/{{ gamename }}/pick_card/">
     <p>{{ card }}</p>
     <button type="submit" name="card_success" value="true">Yes</button>
     <button type="submit" name="card_success" value="false">No</button>
-</form>
-<form id = "start" method="POST" action="/{{ gamename }}/start_round/">
-    <button type="submit" id="start">Start</button>
 </form>
 <p id = "status">
     <span>Team 1: {{ team1_score }}</span><br>
