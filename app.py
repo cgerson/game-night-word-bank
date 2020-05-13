@@ -2,17 +2,24 @@ from __future__ import unicode_literals
 
 from flask import Flask, render_template, request, session, url_for, redirect
 from flask_session import Session
+import random
+from game import Game
+#from flask import current_app as app
+#from . import app
 # from flask_assets import Environment, Bundle
 
-from game import Game
+#from . import game
+
+sess = Session()
+
+app = Flask(__name__, instance_relative_config=False)
+app.config.from_object('config.Config') 
+
+Session(app)
+
 
 # http://clouddatafacts.com/heroku/heroku-flask-redis/flask_redis.html#pre-rerequisites 
 # https://hackersandslackers.com/redis-py-python/
-
-app = Flask(__name__, instance_relative_config=False)
-app.config.from_object('config.Config')
-
-Session(app)
 
 '''
 assets = Environment(app)

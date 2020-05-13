@@ -1,11 +1,12 @@
 import random
-import redis
+import redis 
 import os
 
 redis_url = os.environ['REDISCLOUD_URL']
+db=redis.from_url(redis_url)
+
 placeholder_cards = 'Oprah_Santa Claus_Harry Potter_Beyonce_Lance Armstrong_Steve Jobs_Tom Hanks_Lil Dicky_Moses_Marge Simpson_Captain Kirk_FDR_Gandalf_Netanyahu_Beatrice Potter_Peter Pan'
 
-db=redis.from_url(redis_url)
 db.set('default_card_pack', placeholder_cards)
 
 class Game:
