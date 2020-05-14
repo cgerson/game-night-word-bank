@@ -1,19 +1,32 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<p id="instruction">Add celebrity names, fictional characters, your favorite food -- whatever you want your friends to guess. Enter five cards per person for typical game play, but adjust for shorter / longer games. </p>
-<form id = "add_cards" method="POST" action="/{{ gamename }}/add_one_card/">
-    <input type="text" name="newcard" placeholder="enter new card" required><br>
-    <input type="submit" name="submit" id="game_option" value="Add">
+<div class = "site-instruction">
+    <p id="instruction">Add celebrity names, fictional characters, your favorite food -- whatever you want your friends to guess. Enter five cards per person for typical game play, but adjust for shorter / longer games. </p>
+</div> 
+<form id = "add_cards" class = "site-form" method="POST" action="/{{ gamename }}/add_one_card/">
+    <div class = "site-options1">
+        <input type="text" name="newcard" placeholder="enter new card" required><br>
+    </div>
+    <div class = "site-options2">
+        <input type="submit" name="submit" id="addcard" value="Add">
+    </div>
 </form>
-{% for c in cards_added %}
-    <p>{{ c }}</p>
-{% endfor %}
-<p id = "status">Currently {{ numcards }} in card pack
-    <a href="/{{ gamename }}/add-cards/">(update)</a>
-</p><br>
-<form id = "complete_add_cards" method="GET" action="/{{ gamename }}/">
-    <button type="submit" id="game_option">I'm finished adding cards</button>
-</form>
+<div class = "site-instruction">
+    {% for c in cards_added %}
+        <p>{{ c }}</p>
+    {% endfor %}
+</div>
+<div class = "site-status1">
+    <p id = "status">Currently {{ numcards }} cards total in pack</p>
+</div>
+<div class = "site-status2">
+    <a href="/{{ gamename }}/add-cards/">(see latest count)</a>
+</div>
+<div id = "site-nav">
+    <form id = "complete_add_cards" method="GET" action="/{{ gamename }}/">
+        <button type="submit" id="finished">I'm finished adding cards</button>
+    </form>
+</div>
 
 {% endblock %}

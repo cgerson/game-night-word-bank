@@ -15,6 +15,7 @@ class Game:
         self.cardpack = cardpack
         self.team1_score_key = self.sessionize('team1_score',self.gamename)
         self.team2_score_key = self.sessionize('team2_score',self.gamename)
+        self.rounds_key = self.sessionize('rounds',self.gamename)
         self.last_card_picked_key = self.sessionize('last_card_picked',self.gamename)
         self.card_pack_key = self.sessionize('card_pack',self.gamename)
         self.cards_remaining_key = self.sessionize('cards_remaining',self.gamename)
@@ -30,6 +31,7 @@ class Game:
         
         db.set(self.team1_score_key, '0', 14400)
         db.set(self.team2_score_key, '0', 14400)
+        db.set(self.rounds_key, '0', 14400)
         db.set(self.last_card_picked_key, '', 14400)
     
     def addCard(self, card):
@@ -60,10 +62,30 @@ class Game:
         cards = cards + "_" + str(last_card_picked)
         db.set(self.cards_remaining_key,cards)
 
-    def reset(self):
+    def startRound(self):
+        # reset card pack
         cards=db.get(self.card_pack_key).decode('UTF-8')
         db.set(self.cards_remaining_key,cards)
-        
+        self.incrRound()
+
+    def hardReset(self):
+        # reset card pack
+        cards=db.get(self.card_pack_key).decode('UTF-8')
+        db.set(self.cards_remaining_key,cards)
+        # reset score
+        db.set(self.team1_score_key, '0')
+        db.set(self.team2_score_key, '0')
+        # reset rounds
+        db.set(self.rounds_key, '0')
+
+    def incrRound(self):
+        current_round = int(db.get(self.rounds_key).decode('UTF-8'))
+        new_round = current_round + 1
+        db.set(self.rounds_key, str(new_round))
+
+    def getRound(self):
+        return db.get(self.rounds_key).decode('UTF-8')
+
     def addPoint(self, team):
         if team == "team1":
             current_score = int(db.get(self.team1_score_key).decode('UTF-8'))

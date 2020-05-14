@@ -1,3 +1,5 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 <html>
     <head>
         <title>Word Bank</title>
@@ -6,15 +8,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
-        <div id = "copyright" >
-            &copy; Copyright 2020 by <a href="http://www.clairegerson.com/" target="_blank">me</a>.<br>
-        </div>
-        {% if gamename is defined %}
-        <p id = "instruction">Share this game link and tell friends to enter <b>{{ gamename }}</b></div>
-        {% endif %}
-        <h1><a href = "/">Word Bank</a></h1>
-        
-        {% block content %} {% endblock %}
+        <div class = "site-main">
+            <header class = "site-header">
+                &copy; Copyright 2020 by <a href="http://www.clairegerson.com/" target="_blank">me</a> 
+                {% if gamename is defined %}
+                <h1 class = "site-title"><a href = "/{{ gamename }}/">Word Bank</a></h1>
+                {% else %}
+                <h1 class = "site-title"><a href = "/">Word Bank</a></h1>
+                {% endif %}
+            </header>
+                {% block content %} {% endblock %}
+            <footer class = "site-footer">
+                {% if gamename is defined %}
+                <p id = "instruction">Share this game link and tell friends to enter <b>{{ gamename }}</b>
+                {% endif %}
+            </footer>
         </div>
     </body>
 </html>

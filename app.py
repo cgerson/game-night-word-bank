@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from flask import Flask, render_template, request, session, url_for, redirect
+from flask import Flask, Response, render_template, request, session, url_for, redirect
 from flask_session import Session
 import random
 from game import Game
@@ -42,7 +42,9 @@ action_labels = {
 # use hashes to record each games "last" things: last card, last team. though session might make more sense
 # reorg with application context and all that
 # keep track of rounds
-# reset score?
+# reset: reset score and card deck
+# timer
+# if user enters not thru create/join, they should be redirected
 
 @app.route('/', methods = ['POST', 'GET'])
 def lobby():  
@@ -67,6 +69,8 @@ def build_new_game():
     game = Game(gamename, cardpack)
     game.setVars()
 
+    session['gamename'] = gamename
+
     if cardpack == 'custom':
         return redirect(url_for('add_cards', gamename = gamename))
     else:
@@ -79,6 +83,8 @@ def build_existing_game():
     resetSessionVars()
 
     gamename = request.form.get('gamename', '')
+    session['gamename'] = gamename
+
     return redirect(url_for('add_cards', gamename = gamename))
 
 @app.route('/<gamename>/add_one_card/', methods = ['POST', 'GET'])
@@ -91,6 +97,11 @@ def add_one_card(gamename):
 
 @app.route('/<gamename>/add-cards/', methods = ['POST', 'GET'])
 def add_cards(gamename):  
+
+    # redirect
+    if session.get('gamename') != gamename:
+        return redirect(url_for('lobby'))
+
     game = Game(gamename)
     numcards = game.getNumCards()
 
@@ -100,17 +111,24 @@ def add_cards(gamename):
 
 @app.route('/<gamename>/', methods = ['POST', 'GET'])
 def home(gamename, card='', selected_team1 = '', selected_team2 = ''): 
+
+    # redirect
+    if session.get('gamename') != gamename:
+        return redirect(url_for('lobby'))
+
     game = Game(gamename)
     numcards = game.getNumCardsRemaining()
     score = game.getScore()
+    current_round = game.getRound()
     team1_score = score['team1_score']
     team2_score = score['team2_score']
     card = session.get('current_card')
     next_action = session.get('next_action', 'start')
+    disabled = "disabled" if next_action in ("start", "start_new") else ""
     next_action_label = action_labels[next_action]
     team_checked = session.get('team_checked', 'team1')
     
-    return render_template('home.html', gamename = gamename, card = card, team1_score = team1_score, team2_score = team2_score, numcards = numcards, team_checked = team_checked, next_action = next_action, next_action_label = next_action_label)
+    return render_template('home.html', gamename = gamename, card = card, team1_score = team1_score, team2_score = team2_score, numcards = numcards, current_round = current_round, team_checked = team_checked, next_action = next_action, next_action_label = next_action_label, disabled = disabled)
 
 @app.route('/<gamename>/pick_card/', methods = ['POST', 'GET'])
 def pick_card(gamename):  
@@ -126,10 +144,13 @@ def pick_card(gamename):
         game.addPoint(session['team_checked'])
     
     card = game.pickCard()
-    if not card:
+    if card:
+        session['next_action'] = 'stop'
+    else:
         card = "Round is over. Click 'Start' when ready to begin next round."
         session['next_action'] = 'start_new'
-    session['current_card'] = card
+    session['current_card'] = card 
+
     return redirect(url_for('home', gamename = gamename))
     #return home(gamename = gamename, card = card, selected_team1 = selected_team1, selected_team2 = selected_team2)
 
@@ -154,24 +175,37 @@ def stop_round(gamename):
 @app.route('/<gamename>/start_new_round/', methods = ['POST', 'GET'])
 def start_new_round(gamename):  
     game = Game(gamename)
-    game.reset()
+    game.startRound()
     team = request.form.get('team')
     session['team_checked'] = team
     session['next_action'] = 'stop'
     return redirect(url_for('pick_card', gamename = gamename))
 
-# TODO test this
+@app.route('/<gamename>/hard_reset/', methods = ['POST', 'GET'])
+def hard_reset(gamename):  
+    game = Game(gamename)
+    game.hardReset()
+    return redirect(url_for('home', gamename = gamename))
+
 @app.errorhandler(404)
-def not_found():
+def not_found(e):
     """Page not found."""
-    return make_response(render_template("404.html"), 404)
+    return render_template("404.html"), 404
 
 def resetSessionVars():
+    session['gamename'] = None # check to redirect users to lobby if needed
     session['cards_added'] = []
     session['current_card'] = ''
-    session['next_action'] = 'start'
+    session['next_action'] = 'start_new'
     session['team_checked'] = 'team1'
     return
+
+# TODO test this
+@app.route('/time_feed')
+def time_feed():
+    def generate():
+        yield datetime.now().strftime("%Y.%m.%d|%H:%M:%S")  # return also will work
+    return Response(generate(), mimetype='text') 
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,25 +1,49 @@
 {% extends "layout.html" %}
 {% block content %}
+
 <form id = "start_stop" method="POST" action="/{{ gamename }}/{{ next_action }}_round/">
-    <select name = "team">
-        {% if team_checked == 'team1' %}
-        <option value="team1" selected>Team 1</option>
-        <option value="team2">Team 2</option>
-        {% else %}
-        <option value="team1">Team 1</option>
-        <option value="team2" selected>Team 2</option>
-        {% endif %}
-    </select>
-    <button type="submit" id="start_stop">{{ next_action_label }}</button>
+    <div class = "site-options1">
+        <select name = "team">
+            {% if team_checked == 'team1' %}
+            <option value="team1" selected>Team 1</option>
+            <option value="team2">Team 2</option>
+            {% else %}
+            <option value="team1">Team 1</option>
+            <option value="team2" selected>Team 2</option>
+            {% endif %}
+        </select>
+    </div>
+    <div class = "site-options2">
+        <button type="submit" id="start_stop">{{ next_action_label }}</button>
+    </div>
 </form>
+<div class = "site-instruction">
+    <p id = "cardpicked">{{ card }}</p>
+</div>
 <form id = "confirm" method="POST" action="/{{ gamename }}/pick_card/">
-    <p>{{ card }}</p>
-    <button type="submit" name="card_success" value="true">Yes</button>
-    <button type="submit" name="card_success" value="false">No</button>
+    <div class = "site-options1">
+        <button type="submit" name="card_success" value="true" {{ disabled }}><span class="material-icons">check</span></button>
+    </div>
+    <div class = "site-options2">
+        <button type="submit" name="card_success" value="false" {{ disabled }}><span class="material-icons">clear</span></button>
+    </div>
 </form>
-<p id = "status">
-    <span>Team 1: {{ team1_score }}</span><br>
-    <span>Team 2: {{ team2_score }}</span><br>
-    <span>Cards remaining: {{ numcards }}</span>
-</p>
+<div class = "site-status">
+    <p id = "instruction">Game status:</p>
+    <p id = "status">
+        <span>Team 1: {{ team1_score }}</span><br>
+        <span>Team 2: {{ team2_score }}</span><br>
+        <span>Cards remaining this round: {{ numcards }}</span><br>
+        <span>Round: {{ current_round }}</span>
+    </p>
+</div>
+<div class = "site-status">
+    <p><a href="/{{ gamename }}/">(update game status)</a></p>
+</div>
+<div class = "site-nav">
+    <form id = "hardreset" method="GET" action="/{{ gamename }}/hard_reset/">
+        <button type="submit" id="game_option">Reset game</button>
+    </form>
+</div>
+
 {% endblock %}
