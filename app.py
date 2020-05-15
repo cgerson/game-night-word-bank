@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from flask import Flask, Response, render_template, request, session, url_for, redirect
 from flask_session import Session
 import random
+import datetime
 from game import Game
 #from flask import current_app as app
 #from . import app
@@ -103,11 +104,11 @@ def add_cards(gamename):
         return redirect(url_for('lobby'))
 
     game = Game(gamename)
-    numcards = game.getNumCards()
+    numcardstotal = game.getNumCards()
 
     cards_added = session['cards_added'][::-1]
 
-    return render_template('add-cards.html', cards_added = cards_added, numcards = numcards, gamename = gamename)
+    return render_template('add-cards.html', cards_added = cards_added, numcardstotal = numcardstotal, gamename = gamename)
 
 @app.route('/<gamename>/', methods = ['POST', 'GET'])
 def home(gamename, card='', selected_team1 = '', selected_team2 = ''): 
@@ -118,6 +119,7 @@ def home(gamename, card='', selected_team1 = '', selected_team2 = ''):
 
     game = Game(gamename)
     numcards = game.getNumCardsRemaining()
+    numcardstotal = game.getNumCards()
     score = game.getScore()
     current_round = game.getRound()
     team1_score = score['team1_score']
@@ -128,7 +130,7 @@ def home(gamename, card='', selected_team1 = '', selected_team2 = ''):
     next_action_label = action_labels[next_action]
     team_checked = session.get('team_checked', 'team1')
     
-    return render_template('home.html', gamename = gamename, card = card, team1_score = team1_score, team2_score = team2_score, numcards = numcards, current_round = current_round, team_checked = team_checked, next_action = next_action, next_action_label = next_action_label, disabled = disabled)
+    return render_template('home.html', gamename = gamename, card = card, team1_score = team1_score, team2_score = team2_score, numcards = numcards, numcardstotal = numcardstotal, current_round = current_round, team_checked = team_checked, next_action = next_action, next_action_label = next_action_label, disabled = disabled)
 
 @app.route('/<gamename>/pick_card/', methods = ['POST', 'GET'])
 def pick_card(gamename):  
@@ -160,8 +162,8 @@ def start_round(gamename):
     
     team = request.form.get('team')
     session['team_checked'] = team
-
     session['next_action'] = 'stop'
+    session['timestamp_start'] = addSecs(datetime.datetime.now(), 0)
     return redirect(url_for('pick_card', gamename = gamename))
 
 @app.route('/<gamename>/stop_round/', methods = ['POST', 'GET'])
@@ -179,12 +181,15 @@ def start_new_round(gamename):
     team = request.form.get('team')
     session['team_checked'] = team
     session['next_action'] = 'stop'
+    session['timestamp_start'] = addSecs(datetime.datetime.now(), 0)
     return redirect(url_for('pick_card', gamename = gamename))
 
 @app.route('/<gamename>/hard_reset/', methods = ['POST', 'GET'])
 def hard_reset(gamename):  
     game = Game(gamename)
     game.hardReset()
+    session['current_card'] = ''
+    session['next_action'] = 'start_new'
     return redirect(url_for('home', gamename = gamename))
 
 @app.errorhandler(404)
@@ -198,14 +203,39 @@ def resetSessionVars():
     session['current_card'] = ''
     session['next_action'] = 'start_new'
     session['team_checked'] = 'team1'
+    session['timestamp_start'] = addSecs(datetime.datetime.now(), 0)
+    session['times_up'] = True
     return
 
+def addSecs(tm, secs):
+    fulldate = datetime.datetime(100, 1, 1, tm.hour, tm.minute, tm.second)
+    fulldate = fulldate + datetime.timedelta(seconds=secs)
+    return fulldate
+
 # TODO test this
-@app.route('/time_feed')
+@app.route('/time_feed/')
 def time_feed():
+    now_plus_30sec = addSecs(session['timestamp_start'], 30)
+    if (now_plus_30sec - addSecs(datetime.datetime.now(), 0)) > datetime.timedelta(0,0):
+        def generate():
+            yield str(now_plus_30sec - addSecs(datetime.datetime.now(), 0))
+        return Response(generate(), mimetype='text')
+    else:
+        return 'Press Stop'
+        #home(gamename = session['gamename'])
+    '''
     def generate():
-        yield datetime.now().strftime("%Y.%m.%d|%H:%M:%S")  # return also will work
+        if (now_plus_30sec - addSecs(datetime.datetime.now(), 0)) > datetime.timedelta(0,0):
+            yield str(now_plus_30sec - addSecs(datetime.datetime.now(), 0))
+        else:
+            yield "Time's up"
+        #.time().strftime("%H:%M:%S")  # return also will work
+        # .strftime("%H:%M:%S")
     return Response(generate(), mimetype='text') 
+
+    '''
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

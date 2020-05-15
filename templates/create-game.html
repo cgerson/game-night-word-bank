@@ -1,22 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
-<form id = "create_game" class = "site-form" method="POST" action="/build_new_game/">
     <div class = "site-instruction">
-        <input type="text" name="gamename" placeholder="enter game name" required><br>
+        <p id="instruction">Give your game a unique name and select your card pack. Choose Custom to write your own cards.</p>
     </div>
-    <div class = "site-instruction">
-        <p id="instruction">Do you want to enter your own cards (Custom) or play with the default cards (Default)?</p>
-    </div>
-    <div class = "site-options1">
-        <input type="radio" name="cardpack" id="custom" value="custom" checked>
-        <label for="custom">Custom (recommended)</label><br>
-    </div>
-    <div class = "site-options2">
-        <input type="radio" name="cardpack" id="default" value="default">
-        <label for="default">Default</label><br>
+
+    <div class = "site-options">
+        <form id = "create_game" method="POST" action="/build_new_game/">
+            <input type="text" name="gamename" placeholder="enter game name" required><br>
+            <input type="radio" name="cardpack" id="custom" value="custom" checked>
+            <label for="custom">Custom (recommended)</label><br>
+            <input type="radio" name="cardpack" id="default" value="default">
+            <label for="default">Default</label><br>
     </div>
     <div class = "site-submit">
-        <input type="submit" name="submit" id="game_option" value="Create">
+            <input type="submit" name="submit" id="game_option" value="Create">
+        </form>
     </div>  
-</form>
 {% endblock %}

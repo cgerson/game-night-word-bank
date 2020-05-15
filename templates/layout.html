@@ -1,5 +1,6 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+
 <html>
     <head>
         <title>Word Bank</title>
@@ -10,7 +11,6 @@
     <body>
         <div class = "site-main">
             <header class = "site-header">
-                &copy; Copyright 2020 by <a href="http://www.clairegerson.com/" target="_blank">me</a> 
                 {% if gamename is defined %}
                 <h1 class = "site-title"><a href = "/{{ gamename }}/">Word Bank</a></h1>
                 {% else %}
@@ -22,7 +22,12 @@
                 {% if gamename is defined %}
                 <p id = "instruction">Share this game link and tell friends to enter <b>{{ gamename }}</b>
                 {% endif %}
+                <div id = "copyright">
+                    &copy; Copyright 2020 by <a href="http://www.clairegerson.com/" target="_blank">me</a>
+                </div>
             </footer>
+            <div class = "site-nav">
+            </div>
         </div>
     </body>
 </html>

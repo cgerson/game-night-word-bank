@@ -1,0 +1,66 @@
+
+    .site-main {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto;
+        grid-gap: 1rem;
+        grid-template-areas:
+                    "header header header"
+                    ". instruction ."
+                    "options options options"
+                    "submit submit submit"
+                    "status status status"
+                    "footer footer footer";
+    }
+
+    .site-header {
+        grid-area: header;
+        place-self: center;
+    }
+
+    .site-footer {
+        grid-area: footer;
+        place-self: center;
+    }
+
+    .site-instruction {
+        grid-area: instruction;
+        place-self: center;
+    }
+
+    .site-options {
+        grid-area: options;
+        place-self: center;
+    }
+
+    .site-submit {
+        grid-area: submit;
+        place-self: center;
+        grid-template-columns: 60px 60px;
+    }
+
+    .site-status {
+        grid-area: status;
+        place-self: center;
+    }
+
+    .site-nav {
+        grid-area: nav;
+        place-self: end;
+    }
+
+    .site-options1 {
+        place-self: center;
+        grid-column: 1 / 2;
+    }
+
+    .site-options2 {
+        place-self: center;
+        grid-column: 2 / 3;
+    }
+
+    #cardpicked {
+        min-height: 100px;
+        width: 120px;
+        border: 1px solid black;
+    }
