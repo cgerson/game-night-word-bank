@@ -8,12 +8,12 @@
 </div> 
 <div class = "site-options">
     <form id = "add_cards" method="POST" action="/{{ gamename }}/add_one_card/">
-        <div class = "site-options1">
+        <span class = "site-options1">
             <input type="text" name="newcard" placeholder="enter new card" required><br>
-        </div>
-        <div class = "site-options2">
+        </span>
+        <span class = "site-options2">
             <input type="submit" name="submit" id="addcard" value="Add">
-        </div>
+        </span>
     </form>
     {% for c in cards_added %}
         <p>{{ c }}</p>
@@ -26,7 +26,6 @@
 </div>
 <div class = "site-status">
     <p id = "status">Currently {{ numcardstotal }} cards total in pack</p>
-    <a href="/{{ gamename }}/add-cards/">(see latest count)</a>
 </div>
 
 {% endblock %}

@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class = "site-instruction">
-    When all players are ready, the first player to give clues begins the game by pressing Start. When their time is out, the next player presses Start on their device. Make sure to select your team before picking cards.
+    <details><summary>Instructions</summary>
+        When all players are ready, the first player to give clues begins the game by pressing Start. When their time is up, the next player presses Start on their device. Make sure to select your team before picking cards.
+    </details>
 </div>
 <div class = "site-options">
     <form id = "start_stop" method="POST" action="/{{ gamename }}/{{ next_action }}_round/">

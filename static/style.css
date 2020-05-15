@@ -1,6 +1,8 @@
 
     .site-main {
         display: grid;
+        font-family: Roboto, Helvetica, sans-serif;
+        font-size: smaller;
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: auto;
         grid-gap: 1rem;
@@ -30,7 +32,8 @@
 
     .site-options {
         grid-area: options;
-        place-self: center;
+        justify-self: center;
+        grid-template-columns: 60px 60px;
     }
 
     .site-submit {
@@ -42,6 +45,7 @@
     .site-status {
         grid-area: status;
         place-self: center;
+        text-align: center;
     }
 
     .site-nav {
@@ -63,4 +67,31 @@
         min-height: 100px;
         width: 120px;
         border: 1px solid black;
+    }
+
+
+    /* links */
+
+    /* unvisited link */
+    a:link {
+    color: black;
+    text-decoration: none;
+    }
+
+    /* visited link */
+    a:visited {
+    color: black;
+    text-decoration: none;
+    }
+
+    /* mouse over link */
+    a:hover {
+    color: blue;
+    text-decoration: none;
+    }
+
+    /* selected link */
+    a:active {
+    color: blue;
+    text-decoration: none;
     }
