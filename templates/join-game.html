@@ -1,13 +1,14 @@
 {% extends "layout.html" %}
 {% block content %}
 
-    <div class = "site-instruction">
-        <form id = "join_game" method="POST" action="/build_existing_game/">
-            <input type="text" name="gamename" placeholder="enter game name" required><br>
+    <div class = "site-options">
+        <form id = "join-game" method="POST" action="/build_existing_game/">
+            <input type="text" name="gamename" class="game-text-input" placeholder="enter game name" required><br>
     </div>
     <div class = "site-submit">
-            <input type="submit" name="submit" id="game_option" value="Join">
+        <input type="submit" name="submit" id="game-submit" value="Join">
         </form>
     </div>
+
 
 {% endblock %}

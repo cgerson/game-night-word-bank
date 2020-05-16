@@ -149,7 +149,7 @@ def pick_card(gamename):
     if card:
         session['next_action'] = 'stop'
     else:
-        card = "Round is over. Click 'Start' when ready to begin next round."
+        card = "No cards remaining. Round is over."
         session['next_action'] = 'start_new'
     session['current_card'] = card 
 
@@ -221,7 +221,7 @@ def time_feed():
             yield str(now_plus_30sec - addSecs(datetime.datetime.now(), 0))
         return Response(generate(), mimetype='text')
     else:
-        return 'Press Stop'
+        return "Your turn's up!"
         #home(gamename = session['gamename'])
     '''
     def generate():

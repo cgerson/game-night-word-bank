@@ -5,15 +5,15 @@
     </div>
 
     <div class = "site-options">
-        <form id = "create_game" method="POST" action="/build_new_game/">
-            <input type="text" name="gamename" placeholder="enter game name" required><br>
+        <form id = "create-game" method="POST" action="/build_new_game/">
+            <input type="text" name="gamename" placeholder="enter game name" class = "game-text-input" required><br>
             <input type="radio" name="cardpack" id="custom" value="custom" checked>
             <label for="custom">Custom (recommended)</label><br>
             <input type="radio" name="cardpack" id="default" value="default">
             <label for="default">Default</label><br>
     </div>
     <div class = "site-submit">
-            <input type="submit" name="submit" id="game_option" value="Create">
+            <input type="submit" name="submit" id="game-submit" value="Create">
         </form>
     </div>  
 {% endblock %}

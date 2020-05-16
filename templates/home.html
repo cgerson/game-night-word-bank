@@ -2,12 +2,12 @@
 {% block content %}
 <div class = "site-instruction">
     <details><summary>Instructions</summary>
-        When all players are ready, the first player to give clues begins the game by pressing Start. When their time is up, the next player presses Start on their device. Make sure to select your team before picking cards.
+        When all players are ready, the first player to give clues begins the game by pressing Start.<br><br>When it's your turn to give clues, if your team guesses the card correctly, press the check. If you wish to skip the card, press the cross.<br><br>When your time is up, the next player to give clues will press Start on their device.<br><br>Make sure to select your team before picking cards.
     </details>
 </div>
 <div class = "site-options">
-    <form id = "start_stop" method="POST" action="/{{ gamename }}/{{ next_action }}_round/">
-        <span class = "site-options1">
+    <form id = "start-stop" method="POST" action="/{{ gamename }}/{{ next_action }}_round/">
+        <div class = "game-submit">
             <select name = "team">
                 {% if team_checked == 'team1' %}
                 <option value="team1" selected>Team 1</option>
@@ -17,19 +17,19 @@
                 <option value="team2" selected>Team 2</option>
                 {% endif %}
             </select>
-        </span>
-        <span class = "site-options2">
+        </div>
+        <div class = "game-submit">
             <button type="submit" id="start_stop">{{ next_action_label }}</button>
-        </span>
+        </div>
     </form>
     <div id = "cardpicked">{{ card }}</div>
 </div>
 <div class = "site-submit">
     <form id = "confirm" method="POST" action="/{{ gamename }}/pick_card/">
-        <span class = "site-options1">
+        <span class = "game-submit">
             <button type="submit" name="card_success" value="false" {{ disabled }}><span class="material-icons">clear</span></button>
         </span>
-        <span class = "site-options2">
+        <span class = "game-submit">
             <button type="submit" name="card_success" value="true" {{ disabled }}><span class="material-icons">check</span></button>
         </span>
     </form>

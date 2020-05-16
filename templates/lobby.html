@@ -4,12 +4,12 @@
     <p id="instruction">Two teams compete in three rounds to guess names or words before time runs out. </p>
     <p id="instruction">Create a new game or join an existing one below. If the game is created with a "Custom" card pack, every player who joins will be prompted to enter their own cards.</p>
 </div>
-<div class = "site-options">
+<div class = "site-submit">
     <form id = "create" method="GET" action="/create-game/">
-        <button type="submit" id="game_option">New Game</button>
+        <button type="submit" class="game-submit" id = "button1">New Game</button>
     </form>
     <form id = "join" method="GET" action="/join-game/">
-        <button type="submit" id="game_option">Join Game</button>
+        <button type="submit" class="game-submit" id = "button2">Join Game</button>
     </form>
 </div>
 {% endblock %}

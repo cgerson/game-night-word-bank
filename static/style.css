@@ -2,15 +2,19 @@
     .site-main {
         display: grid;
         font-family: Roboto, Helvetica, sans-serif;
-        font-size: smaller;
+        font-size: calc(16px + 0.5vw);
+        line-height: calc(1.1em + 0.5vw);
+        /*
         grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: auto;
+        grid-template-rows: auto;*/
+        grid-template-columns: 20% 60% 20%;
+        grid-template-rows: auto-fit;
         grid-gap: 1rem;
         grid-template-areas:
                     "header header header"
                     ". instruction ."
                     "options options options"
-                    "submit submit submit"
+                    ". submit ."
                     "status status status"
                     "footer footer footer";
     }
@@ -23,6 +27,7 @@
     .site-footer {
         grid-area: footer;
         place-self: center;
+        font-size: calc(12px + 0.5vw);
     }
 
     .site-instruction {
@@ -32,20 +37,22 @@
 
     .site-options {
         grid-area: options;
-        justify-self: center;
-        grid-template-columns: 60px 60px;
+        place-self: center;
+        text-align: center;
+        /*grid-template-columns: 60px 60px;*/
     }
 
     .site-submit {
         grid-area: submit;
         place-self: center;
-        grid-template-columns: 60px 60px;
+        font-size: calc(14px + 0.5vw);
     }
 
     .site-status {
         grid-area: status;
         place-self: center;
         text-align: center;
+        font-size: calc(14px + 0.5vw);
     }
 
     .site-nav {
@@ -53,22 +60,34 @@
         place-self: end;
     }
 
-    .site-options1 {
-        place-self: center;
-        grid-column: 1 / 2;
-    }
-
-    .site-options2 {
-        place-self: center;
-        grid-column: 2 / 3;
-    }
-
     #cardpicked {
         min-height: 100px;
-        width: 120px;
+        width: 200px;
         border: 1px solid black;
     }
 
+
+    /* buttons height: 25px;*/
+
+    .game-submit  {
+        font-size: larger;
+    }
+
+    input[type=radio] {
+        margin-top: 1.5em;
+    }
+
+    input[type=submit] {
+        font-size: larger;
+    }
+
+    input[type=text]{
+        font-size: larger;
+    }
+
+    #join-game {
+        font-size: larger;
+    }
 
     /* links */
 

@@ -7,12 +7,13 @@
     <p id = "instruction">Add five cards per person for typical game play, but adjust for shorter / longer games.</p>
 </div> 
 <div class = "site-options">
-    <form id = "add_cards" method="POST" action="/{{ gamename }}/add_one_card/">
+    <form id = "add-cards" method="POST" action="/{{ gamename }}/add_one_card/">
         <span class = "site-options1">
-            <input type="text" name="newcard" placeholder="enter new card" required><br>
+            <input type="text" name="newcard" placeholder="enter new card" class="game-text-input" required><br>
         </span>
         <span class = "site-options2">
-            <input type="submit" name="submit" id="addcard" value="Add">
+            <button type="submit" name="submit" id="addcard" class = "game-submit"><span class="material-icons">add</span></button>
+            
         </span>
     </form>
     {% for c in cards_added %}
@@ -21,7 +22,7 @@
 </div>
 <div class = "site-submit">
     <form id = "complete_add_cards" method="GET" action="/{{ gamename }}/">
-        <button type="submit" id="finished">I'm finished adding cards</button>
+        <button type="submit" class = "game-submit" id="finished">I'm finished adding cards</button>
     </form>
 </div>
 <div class = "site-status">
