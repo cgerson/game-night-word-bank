@@ -228,10 +228,10 @@ def addSecs(tm, secs):
 # TODO test this
 @app.route('/time_feed/')
 def time_feed():
-    now_plus_30sec = addSecs(session['timestamp_start'], 30)
-    if (now_plus_30sec - addSecs(datetime.datetime.now(), 0)) > datetime.timedelta(0,0):
+    now_plus = addSecs(session['timestamp_start'], 60)
+    if (now_plus - addSecs(datetime.datetime.now(), 0)) > datetime.timedelta(0,0):
         def generate():
-            yield str(now_plus_30sec - addSecs(datetime.datetime.now(), 0))
+            yield str(now_plus - addSecs(datetime.datetime.now(), 0))
         return Response(generate(), mimetype='text')
     else:
         return "Your turn's up! Press Stop"
