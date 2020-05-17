@@ -125,16 +125,6 @@ def home(gamename, card='', selected_team1 = '', selected_team2 = ''):
     team1_score = score['team1_score']
     team2_score = score['team2_score']
     card = session.get('current_card')
-
-    # won't work bc user already loaded page and next action is start_new always
-    # logic must happen in app 
-    '''
-    first_start = game.checkFirstStart()
-    if first_start == "True":
-        next_action = "start_new" # force start new on first round
-    else:
-        next_action = session.get('next_action', 'start')
-        '''
     
     next_action = session.get('next_action')
 
@@ -244,7 +234,7 @@ def time_feed():
             yield str(now_plus_30sec - addSecs(datetime.datetime.now(), 0))
         return Response(generate(), mimetype='text')
     else:
-        return "Your turn's up!"
+        return "Your turn's up! Press Stop"
         #home(gamename = session['gamename'])
     '''
     def generate():
