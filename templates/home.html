@@ -2,13 +2,13 @@
 {% block content %}
 <div class = "site-instruction">
     <details><summary>Instructions</summary>
-        When all players are ready, the first player to give clues begins the game by pressing Start.<br><br>When it's your turn to give clues, if your team guesses the card correctly, press the check. If you wish to skip the card, press the cross.<br><br>When your time is up, the next player to give clues will press Start on their device.<br><br>Make sure to select your team before picking cards.
+        When all players are ready, the first player to give clues begins the game by pressing Start.<br><br>When it's your turn to give clues, if your team guesses the card correctly, press the check. If you wish to skip the card, press skip.<br><br>When your time is up, the next player to give clues will press Start on their device.<br><br>Make sure to select your team before picking cards.
     </details>
 </div>
 <div class = "site-options">
     <form id = "start-stop" method="POST" action="/{{ gamename }}/{{ next_action }}_round/">
-        <div class = "game-submit">
-            <select name = "team">
+        <div class = "game">
+            <select name = "team" class = "game-start">
                 {% if team_checked == 'team1' %}
                 <option value="team1" selected>Team 1</option>
                 <option value="team2">Team 2</option>
@@ -17,20 +17,20 @@
                 <option value="team2" selected>Team 2</option>
                 {% endif %}
             </select>
-        </div>
-        <div class = "game-submit">
-            <button type="submit" id="start_stop">{{ next_action_label }}</button>
+ 
+            <button type="submit" class = "game-start">{{ next_action_label }}</button>
         </div>
     </form>
-    <div id = "cardpicked">{{ card }}</div>
 </div>
+{% if next_action == "stop" %}
 <div class = "site-submit">
+    <div class = "cardpicked">{{ card }}</div>
     <form id = "confirm" method="POST" action="/{{ gamename }}/pick_card/">
         <span class = "game-submit">
-            <button type="submit" name="card_success" value="false" {{ disabled }}><span class="material-icons">clear</span></button>
+            <button type="submit" name="card_success" value="false" title="skip" {{ disabled }}><span class="material-icons">redo</span></button>
         </span>
         <span class = "game-submit">
-            <button type="submit" name="card_success" value="true" {{ disabled }}><span class="material-icons">check</span></button>
+            <button type="submit" name="card_success" value="true" title="correct" {{ disabled }}><span class="material-icons">check</span></button>
         </span>
     </form>
     {% if next_action == "stop" %}
@@ -39,6 +39,7 @@
     </div><br>
     {% endif %}
 </div>
+{% endif %}
 <div class = "site-status">
     <p id = "instruction">Game status:</p>
     <p id = "status">

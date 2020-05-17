@@ -125,32 +125,50 @@ def home(gamename, card='', selected_team1 = '', selected_team2 = ''):
     team1_score = score['team1_score']
     team2_score = score['team2_score']
     card = session.get('current_card')
-    next_action = session.get('next_action', 'start')
-    disabled = "disabled" if next_action in ("start", "start_new") else ""
+
+    # won't work bc user already loaded page and next action is start_new always
+    # logic must happen in app 
+    '''
+    first_start = game.checkFirstStart()
+    if first_start == "True":
+        next_action = "start_new" # force start new on first round
+    else:
+        next_action = session.get('next_action', 'start')
+        '''
+    
+    next_action = session.get('next_action')
+
+    disabled = "disabled" if next_action == 'start' else ""
     next_action_label = action_labels[next_action]
+    
     team_checked = session.get('team_checked', 'team1')
     
     return render_template('home.html', gamename = gamename, card = card, team1_score = team1_score, team2_score = team2_score, numcards = numcards, numcardstotal = numcardstotal, current_round = current_round, team_checked = team_checked, next_action = next_action, next_action_label = next_action_label, disabled = disabled)
 
 @app.route('/<gamename>/pick_card/', methods = ['POST', 'GET'])
-def pick_card(gamename):  
+def pick_card(gamename, start = False):  
 
     game = Game(gamename)
-    card_success = request.form.get('card_success')
 
-     # not needed
+    # don't need to check for card success on start / start_round, only after "correct" guesses
+    # could create a new route
+    # just need to skip to pickcard
 
-    if card_success == "false":
-        game.returnLastCard()
-    elif card_success == "true": # need logic here if like, 
-        game.addPoint(session['team_checked'])
+    if start == False:
+        card_success = request.form.get('card_success')
+
+        if card_success == "false":
+            game.returnLastCard()
+        elif card_success == "true": # need logic here if like, 
+            game.addPoint(session['team_checked'])
     
     card = game.pickCard()
     if card:
         session['next_action'] = 'stop'
     else:
         card = "No cards remaining. Round is over."
-        session['next_action'] = 'start_new'
+        session['next_action'] = 'start'
+        game.startRound()
     session['current_card'] = card 
 
     return redirect(url_for('home', gamename = gamename))
@@ -159,12 +177,17 @@ def pick_card(gamename):
 @app.route('/<gamename>/start_round/', methods = ['POST', 'GET'])
 def start_round(gamename):  
     game = Game(gamename)
-    
+
+    # insert into here logic in case first round
+    first_start = game.checkFirstStart()
+    if first_start == "true":
+        game.startRound()
+
     team = request.form.get('team')
     session['team_checked'] = team
     session['next_action'] = 'stop'
     session['timestamp_start'] = addSecs(datetime.datetime.now(), 0)
-    return redirect(url_for('pick_card', gamename = gamename))
+    return redirect(url_for('pick_card', gamename = gamename, start = True))
 
 @app.route('/<gamename>/stop_round/', methods = ['POST', 'GET'])
 def stop_round(gamename):  
@@ -182,14 +205,14 @@ def start_new_round(gamename):
     session['team_checked'] = team
     session['next_action'] = 'stop'
     session['timestamp_start'] = addSecs(datetime.datetime.now(), 0)
-    return redirect(url_for('pick_card', gamename = gamename))
+    return redirect(url_for('pick_card', gamename = gamename, start = True))
 
 @app.route('/<gamename>/hard_reset/', methods = ['POST', 'GET'])
 def hard_reset(gamename):  
     game = Game(gamename)
     game.hardReset()
     session['current_card'] = ''
-    session['next_action'] = 'start_new'
+    session['next_action'] = 'start'
     return redirect(url_for('home', gamename = gamename))
 
 @app.errorhandler(404)
@@ -201,7 +224,7 @@ def resetSessionVars():
     session['gamename'] = None # check to redirect users to lobby if needed
     session['cards_added'] = []
     session['current_card'] = ''
-    session['next_action'] = 'start_new'
+    session['next_action'] = 'start'
     session['team_checked'] = 'team1'
     session['timestamp_start'] = addSecs(datetime.datetime.now(), 0)
     session['times_up'] = True

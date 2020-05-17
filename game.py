@@ -20,6 +20,10 @@ class Game:
         self.card_pack_key = self.sessionize('card_pack',self.gamename)
         self.cards_remaining_key = self.sessionize('cards_remaining',self.gamename)
 
+        # need to know the first time game starts, to set card pack remaining to full card pack
+        # cause everyone is adding cards asyncronously 
+        self.first_start_key = self.sessionize('first_start',self.gamename)
+
     def setVars(self):
         # track two game vars:
         # 1 - full card set, in "card_pack_key"
@@ -33,6 +37,8 @@ class Game:
         db.set(self.team2_score_key, '0', 14400)
         db.set(self.rounds_key, '0', 14400)
         db.set(self.last_card_picked_key, '', 14400)
+
+        db.set(self.first_start_key, 'true', 14400)
     
     def addCard(self, card):
         cards=db.get(self.card_pack_key).decode('UTF-8')
@@ -62,13 +68,22 @@ class Game:
         cards = cards + "_" + str(last_card_picked)
         db.set(self.cards_remaining_key,cards)
 
+    def checkFirstStart(self):
+        # is it the first round?
+        first_start =db.get(self.first_start_key).decode('UTF-8')
+        print("first_start", first_start)
+        return first_start
+    
     def startRound(self):
         # reset card pack
+        db.set(self.first_start_key, 'false', 14400) # once the first round starts, we know game has started
         cards=db.get(self.card_pack_key).decode('UTF-8')
         db.set(self.cards_remaining_key,cards)
         self.incrRound()
 
     def hardReset(self):
+        # TODO: can't i just call reset_vars? oh no, bc cards
+
         # reset card pack
         cards=db.get(self.card_pack_key).decode('UTF-8')
         db.set(self.cards_remaining_key,cards)
@@ -77,6 +92,8 @@ class Game:
         db.set(self.team2_score_key, '0')
         # reset rounds
         db.set(self.rounds_key, '0')
+        # reset first round key
+        db.set(self.first_start_key, 'true', 14400)
 
     def incrRound(self):
         current_round = int(db.get(self.rounds_key).decode('UTF-8'))
