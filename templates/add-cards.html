@@ -6,9 +6,9 @@
     <p id = "instruction">Enter celebrity names, fictional characters, your favorite food -- whatever you want your friends to guess. </p>
     <p id = "instruction">Add five cards per person for typical game play. Adjust for shorter / longer games.</p>
 </div> 
-<div class = "site-submit">
+<div class = "site-options">
     <form id = "add-cards" method="POST" action="/{{ gamename }}/add_one_card/">
-        <span>
+
         <div class = "site-options1">
             <input type="text" name="newcard" placeholder="enter new card" class="game-text-input" required><br>
         </div>
@@ -16,13 +16,13 @@
             <button type="submit" name="submit" id="addcard" title="add card" class = "game-submit"><span class="material-icons">add</span></button>
             
         </div>
-    </span>
+
     </form>
     {% for c in cards_added %}
         <p>{{ c }}</p>
     {% endfor %}
-
-
+</div>
+<div class = "site-submit">
     <form id = "complete_add_cards" method="GET" action="/{{ gamename }}/">
         <button type="submit" class = "game-submit" id="finished">I'm finished adding cards</button>
     </form>

@@ -8,7 +8,7 @@
         /*
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: auto;*/
-        grid-template-columns: 20% 60% 20%;
+        grid-template-columns: 18% 60% 18%;
         grid-template-rows: auto 1fr 1fr 1fr 1fr auto;
         /*grid-template-rows: repeat(auto-fit, minmax(30px, 1fr));*/
         grid-gap: 1rem;
@@ -24,6 +24,7 @@
     .site-header {
         grid-area: header;
         place-self: center;
+        font-size: calc(16px + 0.5vw);
     }
 
     .site-footer {
@@ -46,8 +47,8 @@
 
     .site-submit {
         grid-area: submit;
-        /*place-self: stretch;
-        justify-items: center;*/
+        /*place-self: stretch;*/
+        justify-items: center;
         text-align: center;
         font-size: calc(14px + 1vw);
     }
@@ -89,14 +90,14 @@
     /* team and start buttons on home page */
     
     .game {
-        background-color: lightgray;
+        background-color: rgb(85, 84, 84);
     }
 
     .game-start  {
         width: 80%;
         height: 50%;
         margin: 1em;
-        background-color: rgb(136, 247, 136);
+        background-color:white;
         color: black;
       }
 
