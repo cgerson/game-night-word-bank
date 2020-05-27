@@ -2,7 +2,7 @@
 {% block content %}
 <div class = "site-instruction">
     <details><summary>Instructions</summary>
-        When all players are ready, the first player to give clues begins the game by pressing Start.<br><br>When it's your turn to give clues, if your team guesses the card correctly, press the check. If you wish to skip the card, press skip.<br><br>When your time is up, press Stop. The next player to give clues will press Start on their device.<br><br>Make sure to select your team before picking cards.
+        After all cards have been added, players should be split into two teams. The first player to give clues begins the game by pressing Start.<br><br>When it's your turn to give clues, press Start. You'll notice a countdown begin at the bottom of the screen. If your team guesses the card correctly, press the check. If you wish to skip the card, press skip.<br><br>When your time is up, press Stop. The next player to give clues will press Start on their device.<br><br>Make sure to select your team before picking cards.
     </details>
 </div>
 <div class = "site-options">
@@ -33,11 +33,13 @@
             <button type="submit" name="card_success" value="true" title="correct" {{ disabled }}><span class="material-icons">check</span></button>
         </span>
     </form>
-    {% if next_action == "stop" %}
     <div id = "clock">
         <p id="clock"></p>
     </div><br>
-    {% endif %}
+</div>
+{% else %}
+<div class = "site-submit">
+    <div class = "cardpicked"><i>Cards will appear here. <br>Only you will see the cards you pick.</i></div>
 </div>
 {% endif %}
 <div class = "site-status">
@@ -49,7 +51,7 @@
         <span>Cards remaining this round: {{ numcards }} / {{ numcardstotal }}</span><br>
     </p>
     <form id = "hardreset" method="GET" action="/{{ gamename }}/hard_reset/">
-        <button type="submit" id="game_option">Reset game</button>
+        <button type="submit" id="game_option" class="game-reset">Reset game</button>
     </form>
 </div>
 
@@ -65,6 +67,7 @@
                     response.text().then(t => {clock.innerHTML = t})
                 });
             }, 1000);  
+        
     </script>
 {% endblock %}
 
