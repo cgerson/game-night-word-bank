@@ -47,6 +47,13 @@ action_labels = {
 # timer
 # if user enters not thru create/join, they should be redirected
 
+@app.before_request
+def before_request():
+    if not request.is_secure and app.env != "development":
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301
+        return redirect(url, code=code)
+
 @app.route('/', methods = ['POST', 'GET'])
 def lobby():  
     return render_template('lobby.html')
