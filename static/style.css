@@ -49,7 +49,7 @@
         /*place-self: stretch;
         justify-items: center;*/
         text-align: center;
-        /*font-size: calc(14px + 0.5vw);*/
+        font-size: calc(14px + 1vw);
     }
 
     .site-status {
@@ -64,10 +64,16 @@
         place-self: end;
     }
 
-    .cardpicked {
-        min-height: 100px;
+    .cardpicked, .cardpicked-placeholder {
+        min-height: 70px;
         /*width: 200px;*/
         border: 1px solid black;
+    }
+
+    .cardpicked-placeholder  {
+        font-size: smaller;
+        font-style: italic;
+        color: grey;
     }
 
     /* buttons height: 25px;*/
@@ -90,7 +96,7 @@
         width: 80%;
         height: 50%;
         margin: 1em;
-        background-color: lightblue;
+        background-color: rgb(136, 247, 136);
         color: black;
       }
 
