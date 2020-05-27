@@ -1,12 +1,19 @@
 import random
 import redis 
 import os
+from urllib.parse import urlparse
 
-redis_url = os.environ['REDISCLOUD_URL']
-db=redis.from_url(redis_url)
+#redis_url = os.environ['REDISCLOUD_URL']
+#db=redis.from_url(redis_url)
+
+url = urlparse(os.environ.get('REDISCLOUD_URL'))
+db = redis.Redis(host=url.hostname, port=url.port, password=url.password)
+
+#print(db.acl_getuser('default'))
+#print(db.acl_list())
+#db.acl_setuser('default', enabled=True, nopass=True, passwords=None)
 
 placeholder_cards = 'Oprah_Santa Claus_Harry Potter_Beyonce_Lance Armstrong_Steve Jobs_Tom Hanks_Lil Dicky_Moses_Marge Simpson_Captain Kirk_FDR_Gandalf_Netanyahu_Beatrice Potter_Peter Pan'
-
 db.set('default_card_pack', placeholder_cards)
 
 class Game:
@@ -71,7 +78,6 @@ class Game:
     def checkFirstStart(self):
         # is it the first round?
         first_start =db.get(self.first_start_key).decode('UTF-8')
-        print("first_start", first_start)
         return first_start
     
     def startRound(self):

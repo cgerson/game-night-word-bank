@@ -1,6 +1,7 @@
 """App configuration."""
 from os import environ
 import redis
+from urllib.parse import urlparse
 
 
 class Config:
@@ -14,4 +15,10 @@ class Config:
     # Flask-Session
     SESSION_TYPE = environ.get('SESSION_TYPE')
     REDISCLOUD_URL = environ.get('REDISCLOUD_URL')
-    SESSION_REDIS = redis.from_url(environ.get('REDISCLOUD_URL'))
+
+    url = urlparse(REDISCLOUD_URL)
+    SESSION_REDIS = redis.Redis(host=url.hostname, port=url.port, password=url.password)
+
+    #SESSION_REDIS = redis.from_url(environ.get('REDISCLOUD_URL'))
+
+
